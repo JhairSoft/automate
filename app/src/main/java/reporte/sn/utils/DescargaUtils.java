@@ -12,13 +12,21 @@ import java.util.stream.Stream;
 public class DescargaUtils {
 
     public static Set<String> snapshotArchivosExistentes(Path carpeta) {
+        // Validar existencia de la carpeta y crear si no existe
+        if (!Files.exists(carpeta)) {
+            try {
+                Files.createDirectories(carpeta);
+            } catch (IOException e) {
+                throw new RuntimeException("No se pudo crear la carpeta: " + carpeta.toString());
+            }
+        }
         try (Stream<Path> archivos = Files.list(carpeta)) {
             return archivos
                     .filter(Files::isRegularFile)
                     .map(p -> p.getFileName().toString())
                     .collect(Collectors.toSet());
         } catch (IOException e) {
-            throw new RuntimeException("Error al listar archivos existentes: " + e.getMessage());
+            throw new RuntimeException("Error al listar archivos existentes: " + carpeta.toString());
         }
     }
 
