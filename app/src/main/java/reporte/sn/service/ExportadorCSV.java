@@ -27,7 +27,7 @@ public class ExportadorCSV {
     }
 
     public Optional<Path> exportar(Duration timeout) {
-        WebElement intro = Waiter.visible(driver, By.cssSelector("table.data_list_table > thead > tr > th"), 30);
+        WebElement intro = Waiter.visible(driver, By.cssSelector("table.data_list_table.list_table.table.table-hover.list_header_search_disabled > thead > tr > th.text-align-left.list_header_cell.list_hdr"), 30);
         new Actions(driver).contextClick(intro).build().perform();
 
         WebElement exportar = Waiter.visible(driver, By.cssSelector("div.context_item[data-context-menu-label='Exportar']"), 5);
