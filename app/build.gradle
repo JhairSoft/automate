@@ -30,6 +30,9 @@ dependencies {
     
     // https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
     implementation("io.github.bonigarcia:webdrivermanager:6.2.0")
+
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation("mysql:mysql-connector-java:8.0.33")
 }
 
 // Apply a specific Java toolchain to ease working on different environments.

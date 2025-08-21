@@ -9,6 +9,7 @@ import java.util.Optional;
 import org.openqa.selenium.WebDriver;
 
 import reporte.sn.config.Config;
+import reporte.sn.db.OrquestadorCarga;
 import reporte.sn.driver.DriverFactory;
 import reporte.sn.pages.LoginPage;
 import reporte.sn.pages.ReportePage;
@@ -19,6 +20,7 @@ public class App {
     public static void main(String[] args) {
         WebDriver driver = DriverFactory.crearChrome(Config.get("ruta.descarga"));
 
+        // 1. Procesos Web
         try {
             new LoginPage(driver).login(Config.get("usuario"), Config.get("clave"));
 
@@ -39,9 +41,17 @@ public class App {
                     System.out.println("✅ [" + tipo + "] Archivo convertido y guardado como: " + destino);
                 });
             }
-
         } finally {
             driver.quit();
+        }
+
+        // 2. Procesos de base de datos
+        try {
+            new OrquestadorCarga().ejecutar();
+            System.out.println("Proceso finalizado correctamente.");
+        } catch (Exception e) {
+            System.err.println("Error en el proceso: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
