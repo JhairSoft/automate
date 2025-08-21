@@ -15,7 +15,22 @@ public class Config {
         }
     }
 
-    public static String get(String clave){
-        return props.getProperty(clave);
+    public static String get(String clave) {
+        String valor = props.getProperty(clave);
+        if (valor == null || valor.trim().isEmpty()) {
+            throw new IllegalArgumentException("Clave no definida en configuración: " + clave);
+        }
+        return valor.trim();
+    }
+
+    public static InputStream getFile(String claveRuta) {
+        String rutaRelativa = get(claveRuta); // usa el método get para obtener la ruta
+
+        InputStream input = Config.class.getClassLoader().getResourceAsStream(rutaRelativa);
+        if (input == null) {
+            throw new IllegalArgumentException("No se encontró el recurso en el classpath: " + rutaRelativa);
+        }
+
+        return input;
     }
 }

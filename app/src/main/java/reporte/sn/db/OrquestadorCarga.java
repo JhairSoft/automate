@@ -1,5 +1,9 @@
 package reporte.sn.db;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,9 +25,9 @@ public class OrquestadorCarga {
     public void ejecutar() {
         try (Connection conn = conectar()) {
             limpiarTablas(conn);
-            //cargarArchivos(conn);
-            //ejecutarETL(conn);
-            System.out.println("Proceso completo ejecutado correctamente.");
+            cargarArchivos(conn);
+            ejecutarETL(conn);
+            System.out.println("✅ Proceso completo ejecutado correctamente.");
         } catch (Exception e) {
             throw new RuntimeException("Error en la orquestación: " + e.getMessage(), e);
         }
@@ -32,22 +36,48 @@ public class OrquestadorCarga {
     private void limpiarTablas(Connection conn) throws SQLException {
         try (CallableStatement stmt = conn.prepareCall("{call servnow.Depurar_Reporte()}")) {
             stmt.execute();
-            System.out.println("Limpieza de tablas ejecutada.");
+            System.out.println("🧹 Limpieza de tablas ejecutada.");
         }
     }
 
-    private void cargarArchivos(Connection conn) throws SQLException {
+    private void cargarArchivos(Connection conn) {
+        try (InputStream input = Config.getFile("db.script.carga");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+
+            StringBuilder sentencia = new StringBuilder();
+            String linea;
+
+            while ((linea = reader.readLine()) != null) {
+                linea = linea.trim();
+                if (linea.isEmpty() || linea.startsWith("--")) continue;
+
+                sentencia.append(linea).append(" ");
+                if (linea.endsWith(";")) {
+                    ejecutarCarga(conn, sentencia.toString().trim());
+                    sentencia.setLength(0);
+                }
+            }
+
+            System.out.println("📥 Carga de archivos ejecutada desde script externo.");
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error al leer el archivo SQL de carga", e);
+        }
+    }
+
+    private void ejecutarCarga(Connection conn, String sql) {
         try (Statement stmt = conn.createStatement()) {
-            stmt.execute("LOAD DATA LOCAL INFILE 'C:/SERVNOW/INC.csv' INTO TABLE tabla_inc FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;");
-            stmt.execute("LOAD DATA LOCAL INFILE 'C:/SERVNOW/RITM.csv' INTO TABLE tabla_ritm FIELDS TERMINATED BY ',' ENCLOSED BY '\"' LINES TERMINATED BY '\\n' IGNORE 1 LINES;");
-            System.out.println("Archivos INC y RITM cargados.");
+            stmt.execute(sql);
+            System.out.println("✅ Sentencia ejecutada:\n" + sql);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al ejecutar sentencia:\n" + sql, e);
         }
     }
 
     private void ejecutarETL(Connection conn) throws SQLException {
         try (CallableStatement stmt = conn.prepareCall("{call servnow.OrquestarETL()}")) {
             stmt.execute();
-            System.out.println("ETL ejecutada.");
+            System.out.println("🔄 ETL ejecutada.");
         }
     }
 }
