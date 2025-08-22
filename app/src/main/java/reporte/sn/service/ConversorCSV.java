@@ -26,6 +26,7 @@ public class ConversorCSV {
             while ((linea = reader.readLine()) != null) {
                 writer.write(linea);
                 writer.write(LINE_SEPARATOR); // Salto de línea explícito
+                System.out.println("Se generó el archivo con éxito");
             }
         } catch (IOException e) {
             throw new RuntimeException("Error al convertir CSV a UTF-8: " + e.getMessage(), e);

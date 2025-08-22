@@ -68,7 +68,7 @@ public class OrquestadorCarga {
     private void ejecutarCarga(Connection conn, String sql) {
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("✅ Sentencia ejecutada:\n" + sql);
+            System.out.println("Sentencia LOAD DATA ejecutada:\n" + sql);
         } catch (SQLException e) {
             throw new RuntimeException("Error al ejecutar sentencia:\n" + sql, e);
         }
