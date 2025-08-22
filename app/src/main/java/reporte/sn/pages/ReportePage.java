@@ -11,5 +11,6 @@ public class ReportePage {
 
     public void navegarA(String url) {
         driver.get(url);
+        System.out.println("Dirigiendo a la ruta: " + url);
     }
 }

@@ -38,7 +38,7 @@ public class App {
                 archivo.ifPresent(origen -> {
                     Path destino = Paths.get(Config.get("ruta.final"), nombreArchivo);
                     new ConversorCSV().convertirAUTF8(origen, destino);
-                    System.out.println("✅ [" + tipo + "] Archivo convertido y guardado como: " + destino);
+                    System.out.println("[" + tipo + "] Archivo convertido y guardado como: " + destino);
                 });
             }
         } finally {

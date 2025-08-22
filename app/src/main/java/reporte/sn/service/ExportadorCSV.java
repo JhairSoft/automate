@@ -27,19 +27,29 @@ public class ExportadorCSV {
     }
 
     public Optional<Path> exportar(Duration timeout) {
+
+        //Seleccionando sección de la tabla para hacer click derecho
         WebElement intro = Waiter.visible(driver, By.cssSelector("table.data_list_table.list_table.table.table-hover.list_header_search_disabled > thead > tr > th.text-align-left.list_header_cell.list_hdr"), 30);
         new Actions(driver).contextClick(intro).build().perform();
 
+        //Seleccionando la opción de Exportar para ver las opciones
         WebElement exportar = Waiter.visible(driver, By.cssSelector("div.context_item[data-context-menu-label='Exportar']"), 5);
         new Actions(driver).moveToElement(exportar).perform();
 
+        //Seleccionando opción CSV
         Waiter.clickable(driver, By.xpath("//div[text()='CSV']"), 5).click();
+
+        //Acepta Alerta (solo sale si el reporte es muy pesado)
         aceptarAlertaSiExiste(5);
 
+        //Selecciona el boton Espera (solo si el reporte es muy pesado)
         Optional<WebElement> botonEspera = Waiter.elementoSiExiste(driver, By.cssSelector("button.web#export_wait"), 5);
         botonEspera.ifPresent(WebElement::click);
 
+        //Capturar los archivos existentes en la carpeta de descargas (antes de la descarga)
         Set<String> existentes = DescargaUtils.snapshotArchivosExistentes(carpetaDescarga);
+
+        //Seleccionar el boton Descargar
         Waiter.clickable(driver, By.cssSelector("button.web.btn.btn-primary#download_button"), 300).click();
 
         return DescargaUtils.esperarNuevoArchivo(carpetaDescarga, ".csv", existentes, timeout);

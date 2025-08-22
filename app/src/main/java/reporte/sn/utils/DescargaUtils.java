@@ -20,6 +20,7 @@ public class DescargaUtils {
                 throw new RuntimeException("No se pudo crear la carpeta: " + carpeta.toString());
             }
         }
+        // Valida los archivos existentes en esta carpeta y los convierte a Strings
         try (Stream<Path> archivos = Files.list(carpeta)) {
             return archivos
                     .filter(Files::isRegularFile)
@@ -30,7 +31,8 @@ public class DescargaUtils {
         }
     }
 
-    public static Optional<Path> esperarNuevoArchivo(Path carpeta, String extension, Set<String> existentes, Duration timeout) {
+    public static Optional<Path> esperarNuevoArchivo(Path carpeta, String extension, Set<String> existentes,
+            Duration timeout) {
         long inicio = System.currentTimeMillis();
         long limite = timeout.toMillis();
 
@@ -42,10 +44,12 @@ public class DescargaUtils {
                         .filter(p -> !existentes.contains(p.getFileName().toString()))
                         .findFirst();
 
-                if (nuevo.isPresent()) return nuevo;
+                if (nuevo.isPresent())
+                    return nuevo;
 
                 Thread.sleep(1000);
-            } catch (IOException | InterruptedException ignored) {}
+            } catch (IOException | InterruptedException ignored) {
+            }
         }
 
         return Optional.empty();
