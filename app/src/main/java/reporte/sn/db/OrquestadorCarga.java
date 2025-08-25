@@ -24,10 +24,10 @@ public class OrquestadorCarga {
 
     public void ejecutar() {
         try (Connection conn = conectar()) {
+            System.out.println("2 -> Iniciando Proceso de Base de Datos.");
             limpiarTablas(conn);
             cargarArchivos(conn);
             ejecutarETL(conn);
-            System.out.println("✅ Proceso completo ejecutado correctamente.");
         } catch (Exception e) {
             throw new RuntimeException("Error en la orquestación: " + e.getMessage(), e);
         }
@@ -36,7 +36,7 @@ public class OrquestadorCarga {
     private void limpiarTablas(Connection conn) throws SQLException {
         try (CallableStatement stmt = conn.prepareCall("{call servnow.Depurar_Reporte()}")) {
             stmt.execute();
-            System.out.println("🧹 Limpieza de tablas ejecutada.");
+            System.out.println("    2.1 -> Limpieza de tablas ejecutada.");
         }
     }
 
@@ -58,8 +58,6 @@ public class OrquestadorCarga {
                 }
             }
 
-            System.out.println("📥 Carga de archivos ejecutada desde script externo.");
-
         } catch (IOException e) {
             throw new RuntimeException("Error al leer el archivo SQL de carga", e);
         }
@@ -68,7 +66,7 @@ public class OrquestadorCarga {
     private void ejecutarCarga(Connection conn, String sql) {
         try (Statement stmt = conn.createStatement()) {
             stmt.execute(sql);
-            System.out.println("Sentencia LOAD DATA ejecutada:\n" + sql);
+            System.out.println("    2.2 -> Sentencia LOAD DATA ejecutada.");
         } catch (SQLException e) {
             throw new RuntimeException("Error al ejecutar sentencia:\n" + sql, e);
         }
@@ -77,7 +75,7 @@ public class OrquestadorCarga {
     private void ejecutarETL(Connection conn) throws SQLException {
         try (CallableStatement stmt = conn.prepareCall("{call servnow.OrquestarETL()}")) {
             stmt.execute();
-            System.out.println("🔄 ETL ejecutada.");
+            System.out.println("    2.3 -> ETL ejecutada.");
         }
     }
 }

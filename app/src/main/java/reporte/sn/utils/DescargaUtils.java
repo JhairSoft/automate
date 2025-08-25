@@ -44,8 +44,10 @@ public class DescargaUtils {
                         .filter(p -> !existentes.contains(p.getFileName().toString()))
                         .findFirst();
 
-                if (nuevo.isPresent())
+                if (nuevo.isPresent()) {
+                    System.out.println("    1.5 -> Archivo Descargado.");
                     return nuevo;
+                }
 
                 Thread.sleep(1000);
             } catch (IOException | InterruptedException ignored) {

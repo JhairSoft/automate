@@ -22,10 +22,15 @@ public class App {
 
         // 1. Procesos Web
         try {
+            System.out.println("1 -> Iniciando Proceso Web.");
+
             new LoginPage(driver).login(Config.get("usuario"), Config.get("clave"));
 
             List<String> tipos = List.of("INC", "RITM");
             for (String tipo : tipos) {
+
+                System.out.println("    1.2 -> Iniciando Proceso para " + tipo + ".");
+
                 String reportId = Config.get("report.id." + tipo.toLowerCase());
                 String urlReporte = Config.get("url.reporte.base") + reportId;
                 String nombreArchivo = Config.get("archivo.nombre." + tipo.toLowerCase());
@@ -38,7 +43,7 @@ public class App {
                 archivo.ifPresent(origen -> {
                     Path destino = Paths.get(Config.get("ruta.final"), nombreArchivo);
                     new ConversorCSV().convertirAUTF8(origen, destino);
-                    System.out.println("[" + tipo + "] Archivo convertido y guardado como: " + destino);
+                    System.out.println("    1.7 -> [" + tipo + "] Archivo convertido y guardado como: " + destino);
                 });
             }
         } finally {

@@ -16,7 +16,7 @@ public class LoginPage {
         Waiter.visible(driver, By.id("username"), 10).sendKeys(usuario);
         Waiter.visible(driver, By.id("password"), 10).sendKeys(clave);
         Waiter.clickable(driver, By.name("login"), 10).submit();
-        System.out.println("Login Satisfactorio");
+        System.out.println("    1.1 -> Login Satisfactorio.");
         Waiter.clickable(driver, By.xpath("//span[text()='Vista ITSM']"), 10).click();
     }
 }

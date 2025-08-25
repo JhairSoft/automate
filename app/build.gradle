@@ -26,7 +26,7 @@ dependencies {
     implementation libs.guava
 
     // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
-    implementation("org.seleniumhq.selenium:selenium-java:4.34.0")
+    implementation("org.seleniumhq.selenium:selenium-java:4.35.0")
     
     // https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager
     implementation("io.github.bonigarcia:webdrivermanager:6.2.0")

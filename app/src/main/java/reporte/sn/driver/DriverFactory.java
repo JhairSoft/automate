@@ -16,17 +16,23 @@ public class DriverFactory {
         ChromeOptions options = new ChromeOptions();
         Map<String, Object> prefs = new HashMap<>();
 
+        //Seteando preferencias para ChromeDriver
         prefs.put("download.default_directory", rutaDescarga);
         prefs.put("download.prompt_for_download", false);
         prefs.put("credentials_enable_service", false); // Inhabilita el servicio de credenciales
         prefs.put("profile.password_manager_enabled", false); // Inhabilita el gestos de contraseñas
         prefs.put("profile.password_manager_leak_detection", false); // Evita el mensaje de "Cambiar Contraseña"
 
+        //Cargando Preferencias a las opciones
         options.setExperimentalOption("prefs", prefs);
 
+        //Cargando ChromeDriver con las opciones de preferencias
         WebDriver driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
+        System.out.println("-> Drivers cargados Satisfactoriamente.");
+
         return driver;
     }
 }

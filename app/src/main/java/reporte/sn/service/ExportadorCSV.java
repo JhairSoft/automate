@@ -51,6 +51,7 @@ public class ExportadorCSV {
 
         //Seleccionar el boton Descargar
         Waiter.clickable(driver, By.cssSelector("button.web.btn.btn-primary#download_button"), 300).click();
+        System.out.println("    1.4 -> Descargando archivo CSV.");
 
         return DescargaUtils.esperarNuevoArchivo(carpetaDescarga, ".csv", existentes, timeout);
     }
